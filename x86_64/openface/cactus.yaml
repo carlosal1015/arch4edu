@@ -1,10 +1,10 @@
 nvchecker:
   - source: aur
     aur:
-  - source: github
-    github: kaldi-asr/kaldi
 depends:
-  - x86_64/kaldi-openfst
+  - x86_64/dlib
 build_prefix: extra-x86_64
-pre_build: aur-pre-build
+pre_build: |
+  aur-pre-build
+  download-pacman-package openblas
 post_build: aur-post-build
