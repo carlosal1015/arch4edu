@@ -1,14 +1,15 @@
 #Maintainer: sukanka <su975853527 AT gmail.com>
 _pkgname=jaspSem
-_pkgver=0.17.0
+_pkgver=0.17.2
 pkgname=r-${_pkgname,,}
-pkgver=0.17.0
+pkgver=0.17.2
 pkgrel=1
 pkgdesc="SEM Module for JASP"
 arch=('any')
 url="https://github.com/jasp-stats/${_pkgname}"
 license=('GPL')
 depends=(r
+  r-csem
   r-forcats
   r-ggplot2
   r-jaspbase
@@ -21,14 +22,12 @@ depends=(r
   r-tibble
   r-tidyr
 )
-makedepends=('git')
-optdepends=()
-source=("git+https://github.com/jasp-stats/${_pkgname}.git")
-sha256sums=('SKIP')
+source=("${_pkgname}_${_pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
+sha256sums=('12787e5587731582abf1dc54040008d6ba33fcfbb4005ea63b8c6bf8967e0742')
 
 
 build() {
-  tar -cvf ${srcdir}/${_pkgname}_${_pkgver}.tar.gz ${_pkgname}
+
   R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
 }
 
