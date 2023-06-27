@@ -1,0 +1,9 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: Checkout to master
+    command: |
+      sudo pacman --noconfirm -Sy archlinux-keyring >/dev/null 2>&1
+      sudo pacman --needed --noconfirm --noprogressbar -Syuq >/dev/null 2>&1
+      git switch master

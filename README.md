@@ -22,3 +22,5 @@ Please visit the [wiki](../../wiki) site for more information.
 * Telegram group: [@arch4edu-general](https://t.me/arch4edu_general)
 * Matrix room: [#arch4edu-general:libera.chat](https://matrix.to/#/#arch4edu-general:libera.chat)
 * IRC channel: #arch4edu-general on irc.libera.chat
+
+ [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/carlosal1015/arch4edu/tree/gitpod)
