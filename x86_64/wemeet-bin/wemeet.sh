@@ -1,11 +1,8 @@
 #!/bin/sh
 set -eu
-export XDG_SESSION_TYPE=x11
-export QT_QPA_PLATFORM=xcb
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 export QT_STYLE_OVERRIDE=fusion # 解决使用自带 Qt 情况下，字体颜色全白看不到的问题
 export IBUS_USE_PORTAL=1        # fix ibus
-unset WAYLAND_DISPLAY
 USER_RUN_DIR="/run/user/$(id -u)"
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
 FONTCONFIG_DIR="$CONFIG_DIR/fontconfig"
@@ -13,6 +10,13 @@ KDE_GLOBALS_FILE="$CONFIG_DIR/kdeglobals"
 KDE_ICON_CACHE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/icon-cache.kcache"
 WEMEET_APP_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/wemeetapp"
 LD_PRELOAD_WRAP="${LD_PRELOAD:-}:/usr/lib/wemeet/libwemeetwrap.so" # 用于缓解传输文件崩溃问题
+
+if [ "$(basename "$0")" = 'wemeet-x11' ]; then
+    # force x11
+    export XDG_SESSION_TYPE=x11
+    export QT_QPA_PLATFORM=xcb
+    unset WAYLAND_DISPLAY
+fi
 
 if [ -f /usr/bin/bwrap ]; then
     mkdir -p "$WEMEET_APP_DIR"

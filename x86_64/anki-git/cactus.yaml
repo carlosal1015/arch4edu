@@ -1,0 +1,12 @@
+nvchecker:
+  - source: aur
+    aur:
+  - source: github
+    github: ankitects/anki
+depends:
+  - any/python-stringcase
+build_prefix: extra-x86_64
+pre_build: |
+  aur-pre-build
+  echo 'arch=(x86_64)' >> PKGBUILD
+post_build: aur-post-build
