@@ -25,6 +25,7 @@ if [ -f /usr/bin/bwrap ]; then
         --unshare-user-try --unshare-pid --unshare-uts --unshare-cgroup-try \
         --ro-bind / / \
         --dev-bind /dev /dev \
+        --bind /tmp /tmp \
         --ro-bind /dev/null /proc/cpuinfo \
         --tmpfs /sys/devices/virtual \
         --bind "$USER_RUN_DIR" "$USER_RUN_DIR" \
