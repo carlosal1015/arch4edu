@@ -10,8 +10,8 @@
 _pkgname='vision'
 pkgbase='python-torchvision-rocm'
 pkgname=('torchvision-rocm' 'python-torchvision-rocm')
-pkgver=0.15.2
-pkgrel=1
+pkgver=0.16.1
+pkgrel=4
 pkgdesc='Datasets, transforms, and models specific to computer vision (with ROCM support)'
 arch=('x86_64')
 url='https://github.com/pytorch/vision'
@@ -23,7 +23,7 @@ depends=(
   python-scipy
   python-typing_extensions
   python-pytorch-rocm
-  ffmpeg4.4
+  ffmpeg
   libjpeg-turbo
   libpng
 )
@@ -32,28 +32,26 @@ makedepends=(
   ninja
   rocm-hip-sdk
   python-setuptools
-  qt5-base
+  qt6-base
   miopen-hip
+)
+conflicts=(
+  'python-pytorch<2.1.0'
 )
 source=(
   "${_pkgname}-${pkgver}.tar.gz::https://github.com/pytorch/vision/archive/v${pkgver}.tar.gz"
+  "pytorch-vision-8096.patch"
 )
 sha512sums=(
-  'b126d7204500ba84de010beca9c2c51d05071ad4a57f0230474bdcb011a999481b550343ccbd003a1359b6e63528232aa19a90f4003b139fc372d655a41b5007'
+  'ef82ce6a9a35c4034127b4204a87149619102395ac9671f91736289ade97e2fe50759dd05f468800fa0d6c5f1e70fb4a568a321ca79b1b28bd4172fbc5fd7d78'
+  'SKIP'
 )
 
 prepare() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
 
-  # fix building with ffmpeg4.4 by manually setup include and lib dir
-  # and remove other codes to find ffmpeg exe, as ffmpeg4.4 are only headers and libs without ffmpeg cmd
-  sed -e 's#ffmpeg_include_dir = os.path.join(ffmpeg_root, "include")#ffmpeg_include_dir = "/usr/include/ffmpeg4.4"#' \
-    -e 's#ffmpeg_library_dir = os.path.join(ffmpeg_root, "lib")#ffmpeg_library_dir = "/usr/lib/ffmpeg4.4"#' \
-    -e 's#has_ffmpeg = ffmpeg_exe is not None#has_ffmpeg = True#' \
-    -e '/ffmpeg_exe/d' \
-    -e '/ffmpeg_bin/d' \
-    -e '/ffmpeg_root/d' \
-    -i setup.py
+  # Fix build with ffmpeg 6.0
+  patch -Np1 -i "${srcdir}/pytorch-vision-8096.patch"
 }
 
 build() {
@@ -62,19 +60,18 @@ build() {
   mkdir build
   cd build
 
-  # populate build architecture list if not set from arch:python-pytorch-rocm@2.0.1#7
-  if test -n "$PYTORCH_ROCM_ARCH"; then
-    export PYTORCH_ROCM_ARCH="$PYTORCH_ROCM_ARCH"
-  else
-    export PYTORCH_ROCM_ARCH="gfx803;gfx900;gfx906;gfx908;gfx90a;gfx1030;gfx1100;gfx1101;gfx1102"
-  fi
+  # if not set, populate build architecture list from arch:python-pytorch-rocm@2.1.1-2
+  if test -n "$GPU_TARGETS"; then _PYTORCH_ROCM_ARCH="$GPU_TARGETS"; fi
+  if test -n "$AMDGPU_TARGETS"; then _PYTORCH_ROCM_ARCH="$AMDGPU_TARGETS"; fi
+  if test -n "$PYTORCH_ROCM_ARCH"; then _PYTORCH_ROCM_ARCH="$PYTORCH_ROCM_ARCH"; fi
+  if test -z "$_PYTORCH_ROCM_ARCH"; then _PYTORCH_ROCM_ARCH="gfx900;gfx906;gfx908;gfx90a;gfx1030;gfx1100;gfx1101;gfx1102"; fi
+  export PYTORCH_ROCM_ARCH="${_PYTORCH_ROCM_ARCH}"
 
-  # hardcode ROCM_PATH and HIP_ROOT_DIR to /opt/rocm (from arch:python-pytorch-rocm@2.0.1#7)
-  export ROCM_PATH=/opt/rocm
-  export HIP_ROOT_DIR=/opt/rocm
-  # fix bin/hipcc not found, because ROCM_HOME is lost
-  # https://github.com/pytorch/vision/issues/6707#issuecomment-1269640873
-  export ROCM_HOME=/opt/rocm
+  # hardcode ROCM_PATH and HIP_ROOT_DIR to ROCM_HOME to /opt/rocm
+  # fixes bin/hipcc not found, and others.
+  export ROCM_HOME="${ROCM_HOME:-/opt/rocm}"
+  export ROCM_PATH="$ROCM_HOME"
+  export HIP_ROOT_DIR="$ROCM_HOME"
 
   cmake "../" \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -105,7 +102,7 @@ check() {
 
 package_torchvision-rocm() {
   pkgdesc='Datasets, transforms, and models specific to computer vision (C++ library only, with ROCM support)'
-  provides+=(torchvision)
+  provides+=(torchvision torchvision=${pkgver})
   conflicts+=(torchvision)
 
   cd "${srcdir}/${_pkgname}-${pkgver}"
@@ -115,14 +112,11 @@ package_torchvision-rocm() {
 
 package_python-torchvision-rocm() {
   pkgdesc='Datasets, transforms, and models specific to computer vision (with ROCM support)'
-  provides+=(python-torchvision)
+  provides+=(python-torchvision python-torchvision=${pkgver})
   conflicts+=(python-torchvision)
 
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  # fix bin/hipcc not found, because ROCM_HOME is lost
-  ROCM_HOME=/opt/rocm/ \
-    TORCHVISION_INCLUDE=${srcdir} \
-    TORCHVISION_LIBRARY=/usr/lib \
+  TORCHVISION_INCLUDE=${srcdir} TORCHVISION_LIBRARY=/usr/lib \
     python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
