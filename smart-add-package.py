@@ -84,7 +84,7 @@ if __name__ == '__main__':
     parser.add_argument('--template', '-t', default='template/x86_64-simple.yaml', help='the template used to create cactus.yaml (default: template/x86_64-simple.yaml)')
     #parser.add_argument('--repository', default='.', help='path to the repository (default: current directory)')
     parser.add_argument('--provides', '-p', action='append', help='read the provides of a package')
-    parser.add_argument('--nocheck', action="store_true", help='disable check and ignore checkdepends')
+    parser.add_argument('--nocheck', action="store_true", help='disable check and ignore checkdepends (please remember to also use the nocheck template)')
     parser.add_argument('package', help='the package to add (eg: yay)')
     parser.add_argument('directory', help='the output directory (eg: x86_64, x86_64/directory)')
     args = parser.parse_args()
@@ -146,15 +146,18 @@ if __name__ == '__main__':
 
         pkgbase = directory / pkgbase
         pkgbase.mkdir(exist_ok=True)
+        config = pkgbase / 'cactus.yaml'
+        config.unlink(missing_ok=True)
 
         if len(info['Depends']) + len(info['MakeDepends']) == 0:
-            symlink('../' * (len(directory.parents) + 1) + template, pkgbase / 'cactus.yaml')
+            symlink('../' * (len(directory.parents) + 1) + template, config)
             logger.info('Added %s with %s', package, template)
             pkgbases[pkgbase.name] = str(pkgbase)
         else:
             with open(template) as f:
                 lines = f.readlines()
-            with open(pkgbase / 'cactus.yaml', 'w') as f:
+
+            with open(config, 'w') as f:
                 for line in lines:
                     if line.startswith('build_prefix'):
                         if len(info['Depends']) > 0:
