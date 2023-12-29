@@ -16,5 +16,5 @@ build_prefix: extra-x86_64
 makepkg_args: --nocheck
 pre_build: |
   aur-pre-build
-  add makedepends fftw hdf5-openmpi hypre metis mumps parmetis pastix suitesparse superlu superlu_dist triangle valgrind
+  add makedepends fftw hypre metis mumps parmetis pastix superlu_dist triangle valgrind
 post_build: aur-post-build
