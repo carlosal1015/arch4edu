@@ -1,63 +1,53 @@
-# Maintainer: Kien Dang <mail at kien dot ai>
-# Maintainer: Julie Shapiro <jshapiro at nvidia dot com>
-
+# Maintainer: Mark Wagie <mark dot wagie at proton dot me>
+# Contributor: Kien Dang <mail at kien dot ai>
+# Contributor: Julie Shapiro <jshapiro at nvidia dot com>
 pkgname=nvidia-container-toolkit
-
-pkgver=1.13.5
-pkgrel=1
-
-pkgdesc='NVIDIA container runtime toolkit'
+pkgver=1.14.3
+pkgrel=9
+pkgdesc="NVIDIA container runtime toolkit"
 arch=('x86_64')
-url='https://github.com/NVIDIA/nvidia-container-toolkit'
+url="https://github.com/NVIDIA/nvidia-container-toolkit"
 license=('Apache')
-
-makedepends=('go')
-depends=('libnvidia-container-tools>=1.9.0')
-conflicts=('nvidia-container-runtime-hook' 'nvidia-container-runtime<2.0.0')
+depends=("libnvidia-container-tools=$pkgver")
+makedepends=('git' 'go')
+provides=('nvidia-container-runtime')
+conflicts=('nvidia-container-runtime' 'nvidia-container-runtime-hook')
 replaces=('nvidia-container-runtime-hook')
-options=(!lto)
-
 backup=('etc/nvidia-container-runtime/config.toml')
+options=('!makeflags' '!lto')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
+#        'go-nvml-79.patch'  # only for Go 1.21.X
+        )
+sha256sums=('a8dbb6a8d45fe8cb2ecbb7b5d49c332e0e7270e8988e57d2a8587ab1e004f6dd')
 
-source=("${pkgname}-${pkgver}-${pkgrel}.tar.gz"::"${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('2e95a89ca3ab95528df4bf32c5e0c8333e283e0465b9636458282c3d49a1b1da')
+prepare() {
+  cd "$pkgname-$pkgver"
+  mkdir -p build
 
-_srcdir="nvidia-container-toolkit-${pkgver}"
+  # gen/nvml: add --export-dynamic linker flag
+  # https://github.com/NVIDIA/go-nvml/issues/36
+#  cd vendor/github.com/NVIDIA/go-nvml
+#  git apply "$srcdir/go-nvml-79.patch"
+}
 
 build() {
-  cd "${_srcdir}"
-
-  mkdir bin
-
-  GO_LDFLAGS="-Wl,-z,lazy,${LDFLAGS}" \
-  GO111MODULE=auto \
-  GOPATH="${srcdir}/gopath" \
+  cd "$pkgname-$pkgver"
+  export GOPATH="$srcdir/gopath"
+  export GOTOOLCHAIN=go1.20.8
   go build -v \
-    -modcacherw \
-    -buildmode=pie \
-    -gcflags "all=-trimpath=${PWD}" \
-    -asmflags "all=-trimpath=${PWD}" \
-    -ldflags "-s -w -X github.com/NVIDIA/nvidia-container-toolkit/internal/info.version=${pkgver} -extldflags=${GO_LDFLAGS/%,/}" \
-    -o bin \
-    "./..."
-    # -trimpath \  # only go > 1.13
-    #-ldflags " -s -w -extldflags=-Wl,-z,now,-z,relro" \
+    -ldflags "-extldflags=-Wl,-z,lazy -s -w -X github.com/NVIDIA/$pkgname/internal/info.version=$pkgver" \
+    -o build ./...
 
-  # go leaves a bunch of local stuff with 0400, making it break future `makepkg -C` _grumble grumble_
-  GO111MODULE=auto \
-  GOPATH="${srcdir}/gopath" \
+  # Clean module cache for makepkg -C
   go clean -modcache
 }
 
 package() {
-  install -D -m755 "${_srcdir}/bin/nvidia-container-runtime-hook" "${pkgdir}/usr/bin/nvidia-container-runtime-hook"
-  install -D -m755 "${_srcdir}/bin/nvidia-ctk" "${pkgdir}/usr/bin/nvidia-ctk"
+  cd "$pkgname-$pkgver"
+  install -Dm755 build/nvidia-{ctk,container-runtime,container-runtime{.cdi,.legacy,-hook}} -t \
+    "$pkgdir/usr/bin/"
+  ln -s nvidia-container-runtime-hook "$pkgdir/usr/bin/nvidia-container-toolkit"
 
-  pushd "${pkgdir}/usr/bin/"
-  ln -sf "nvidia-container-runtime-hook" "${pkgname}"
-  popd
-  install -D -m644 "${_srcdir}/config/config.toml.rpm-yum" "${pkgdir}/etc/nvidia-container-runtime/config.toml"
-  install -D -m644 "${_srcdir}/oci-nvidia-hook.json" "${pkgdir}/usr/share/containers/oci/hooks.d/00-oci-nvidia-hook.json"
-
-  install -D -m644 "${_srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+  # Generate the default config
+  "$pkgdir"/usr/bin/nvidia-ctk --quiet config --config-file="$pkgdir"/etc/nvidia-container-runtime/config.toml --in-place
 }
