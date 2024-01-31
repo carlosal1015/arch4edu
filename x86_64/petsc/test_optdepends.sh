@@ -14,9 +14,9 @@ if [ -f "/usr/lib/pkgconfig/fftw3.pc" ]; then
   CONFOPTS="${CONFOPTS} --with-fftw=1"
 fi
 
-# HDF5
-if [ -f "/usr/lib/pkgconfig/hdf5.pc" ]; then
-  CONFOPTS="${CONFOPTS} --with-hdf5=1 --with-hdf5-fortran-bindings=1"
+# Kokkos
+if [ -f "/usr/lib/libkokkoscore.so" ]; then
+  CONFOPTS="${CONFOPTS} --with-kokkos=1"
 fi
 
 # HYPRE
@@ -55,17 +55,7 @@ if [ -f /usr/include/scotch.h ]; then
     SCOTCH_LIBS="${SCOTCH_LIBS},libbz2.so"
   fi
   SCOTCH_LIBS="[${SCOTCH_LIBS}]"
-  CONFOPTS="${CONFOPTS} --with-ptscotch=1 --with-ptscotch-lib=${SCOTCH_LIBS} --with-ptscotch-include=${SCOTCH_DIR}"
-fi
-
-# SuiteSparse
-if [ -f "/usr/include/SuiteSparse_config.h" ]; then
-  CONFOPTS="${CONFOPTS} --with-suitesparse=1"
-fi
-
-# SuperLU
-if [ -f "/usr/lib/pkgconfig/superlu.pc" ]; then
-  CONFOPTS="${CONFOPTS} --with-superlu-lib=-lsuperlu --with-superlu-include=/usr/include/superlu"
+  CONFOPTS="${CONFOPTS} --with-ptscotch=1"
 fi
 
 # SuperLU_DIST
@@ -78,11 +68,15 @@ if [ -f "/usr/lib/libtriangle.so" ]; then
   CONFOPTS="${CONFOPTS} --with-triangle=1"
 fi
 
-# Trilinos (ML)
+# ML (Trilinos)
 if [ -f "/usr/lib/libml.so" ]; then
   CONFOPTS="${CONFOPTS} --with-ml=1"
-  # Add boost support (may be useful for trilinos)
-  CONFOPTS="${CONFOPTS} --with-boost=1"
+  CONFOPTS="${CONFOPTS} --with-boost=1" # Add boost support (ML requires it)
+fi
+
+# Zoltan
+if [ -f "/usr/lib/libzoltan.so" ]; then
+  CONFOPTS="${CONFOPTS} --with-zoltan=1"
 fi
 
 echo "${CONFOPTS}"
