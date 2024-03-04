@@ -3,24 +3,24 @@
 # Contributor: Viktor Drobot (aka dviktor) linux776 [at] gmail [dot] com
 
 _pkgname=parallelly
-_pkgver=1.36.0
+_pkgver=1.37.1
 pkgname=r-${_pkgname,,}
 pkgver=${_pkgver//-/.}
-pkgrel=2
+pkgrel=1
 pkgdesc="Enhancing the 'parallel' Package"
-arch=(any)
-url="https://cran.r-project.org/package=${_pkgname}"
-license=(LGPL)
+arch=(x86_64)
+url="https://cran.r-project.org/package=$_pkgname"
+license=('LGPL-2.1-or-later')
 depends=(
   r
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-md5sums=('3e5070dcde41a77610a5141eb1fb674f')
-sha256sums=('b9c0a29155944aae8fdb4cab00c521c7ed16af250450dd2a3dd69d5661427c88')
+md5sums=('d9f4f8ef7f775f0b3c40ee606a482917')
+b2sums=('d317caf5ec33a81808a8344d40620e11bc88ba6322b83d1b8c801ebfb78beb1b70f1850e0213b46a4586127db928891f79bd1e04ebc880d0c9fc9d310f9a7d2a')
 
 build() {
-  mkdir -p build
-  R CMD INSTALL "$_pkgname" -l build
+  mkdir build
+  R CMD INSTALL -l build "$_pkgname"
 }
 
 package() {
