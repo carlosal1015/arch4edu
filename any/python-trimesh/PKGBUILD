@@ -5,17 +5,17 @@
 
 _base=trimesh
 pkgname=python-${_base}
-pkgver=4.1.7
+pkgver=4.3.1
 pkgrel=1
 pkgdesc="Import, export, process, analyze and view triangular meshes"
 arch=(any)
 url="https://trimsh.org"
 license=(MIT)
-depends=(python python-numpy)
+depends=(python-numpy)
 makedepends=(python-build python-installer python-setuptools python-wheel)
 # checkdepends=(python-pytest python-scipy python-lxml python-rtree python-networkx
-#   python-jsonschema python-pillow python-requests python-shapely python-pyinstrument
-#   python-collada python-svg.path python-mapbox-earcut) # python-sympy python-msgpack python-pyglet openscad
+# python-jsonschema python-pillow python-requests python-shapely python-pyinstrument
+# python-collada python-svg.path python-mapbox-earcut) # python-sympy python-msgpack python-pyglet openscad
 optdepends=('python-scipy: convex hulls'
   'python-lxml: handle XML better and faster than built- in XML'
   'python-networkx: graph operations'
@@ -36,11 +36,12 @@ optdepends=('python-scipy: convex hulls'
   'python-scikit-image: for voxel ops'
   'python-mapbox-earcut: triangulate polygons'
   'python-psutil: get memory usage'
+  'gmsh: gmsh file support'
   'python-ruff: static code analyzer'
   'python-pytest: test runner'
   'python-pyinstrument: sampling based profiler') # python-xatlas python-glooey
 source=(${_base}-${pkgver}.tar.gz::https://github.com/mikedh/${_base}/archive/${pkgver}.tar.gz)
-sha512sums=('4b0ca18e03875700f08e8110ac189cd448ca9f5ae07efcdf6a2d8fa3ec22f72a2c2ebf0d40a95e521da8c065aa66b7b0c1685e9bd91d1a7111ddca9c24f8d73c')
+sha512sums=('01d7bcca7c1d36488f236a45481ed0cda2b63cd4a1308b0067ba95392b2517df143e3afb93c8632ad117e2dfea12e3eec80c057f8367a465a8f26b554d29614c')
 
 build() {
   cd ${_base}-${pkgver}

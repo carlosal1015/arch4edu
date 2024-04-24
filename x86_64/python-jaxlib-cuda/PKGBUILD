@@ -1,7 +1,7 @@
 # Maintainer: Daniel Bershatsky <bepshatsky@yandex.ru>
 
 pkgname=python-jaxlib-cuda
-pkgver=0.4.23
+pkgver=0.4.26
 pkgrel=1
 pkgdesc='XLA library for JAX'
 arch=('x86_64')
@@ -13,10 +13,13 @@ makedepends=('bazel' 'gcc12' 'pybind11' 'python-build' 'python-installer'
              'python-setuptools' 'python-wheel')
 conflicts=('python-jaxlib')
 provides=("python-jaxlib=$pkgver")
+xla_commit=12eee889e1f2ad41e27d7b0e970cb92d282d3ec5
 source=("jaxlib-${pkgver}.tar.gz::https://github.com/google/jax/archive/refs/tags/jaxlib-v${pkgver}.tar.gz"
-        'bazelrc.user')
-sha256sums=('e4c06d62ba54becffd91abc862627b8b11b79c5a77366af8843b819665b6d568'
-            '07da4c3594dad382ee02748b860c629ffa083ba37ad22a892291bdc72efbac5e')
+        'bazelrc.user'
+        'https://github.com/bazelbuild/bazel/releases/download/6.1.2/bazel-6.1.2-linux-x86_64')
+sha256sums=('ddc14da1eaa34f23430d40ad9b9585088575cac439a2fa1c6833a247e1b221fd'
+            '07da4c3594dad382ee02748b860c629ffa083ba37ad22a892291bdc72efbac5e'
+            'e89747d63443e225b140d7d37ded952dacea73aaed896bca01ccd745827c6289')
 
 prepare() {
     # Allow any bazel version
@@ -24,6 +27,9 @@ prepare() {
 
     # Add specific bazel's options.
     cp bazelrc.user jax-jaxlib-v${pkgver}/.bazelrc.user
+
+    # TODO(@daskol): Prepare spcific bazel version ad hoc.
+    chmod +x bazel-6.1.2-linux-x86_64
 }
 
 build() {
@@ -44,7 +50,7 @@ build() {
     export CC=gcc
     export CXX=g++
     # For some reason, simlink is not resolved.
-    export GCC_HOST_COMPILER_PATH=/usr/bin/gcc-12
+    export GCC_HOST_COMPILER_PATH=/usr/bin/gcc
     export HOST_C_COMPILER=/usr/bin/${CC}
     export HOST_CXX_COMPILER=/usr/bin/${CXX}
     export TF_CUDA_CLANG=0  # Clang currently disabled because it's not compatible at the moment.
@@ -56,15 +62,16 @@ build() {
     # according to the above, we should be specifying CUDA compute capabilities as 'sm_XX' or 'compute_XX' from now on
     # add latest PTX for future compatibility
     # Valid values can be discovered from nvcc --help
-    export TF_CUDA_COMPUTE_CAPABILITIES=sm_70,sm_72,sm_75,sm_80,sm_86,sm_87,sm_89,sm_90,compute_90
+    export TF_CUDA_COMPUTE_CAPABILITIES=sm_80,sm_86,sm_87,sm_89,sm_90,compute_90
 
     # Override default version.
     export JAXLIB_RELEASE=$pkgver
 
     cd $srcdir/jax-jaxlib-v$pkgver
-    bazel --output_user_root=$srcdir/bazel \
+    ../bazel-6.1.2-linux-x86_64 --output_user_root=$srcdir/bazel \
         run --action_env=JAXLIB_RELEASE --verbose_failures=true \
-        //jaxlib/tools:build_wheel -- --cpu x86_64 --output_path=$PWD/dist
+        //jaxlib/tools:build_wheel -- \
+        --cpu x86_64 --output_path=$PWD/dist --jaxlib_git_hash ''
 }
 
 package() {
