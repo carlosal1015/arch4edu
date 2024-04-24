@@ -1,4 +1,5 @@
 # Maintainer: Attila Greguss <floyd0122[at]gmail[dot]com>
+# Co-Maintainer: Nate Plumm <nate[at]ceresta[dot]com>
 
 pkgbase=dotnet-core-bin
 pkgname=(
@@ -10,9 +11,9 @@ pkgname=(
   'dotnet-targeting-pack-bin'
   'aspnet-targeting-pack-bin'
  )
-pkgver=8.0.1.sdk101
-_runtimever=8.0.1
-_sdkver=8.0.101
+pkgver=8.0.4.sdk204
+_runtimever=8.0.4
+_sdkver=8.0.204
 _short_ver=8.0
 pkgrel=1
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -20,13 +21,13 @@ url='https://www.microsoft.com/net/core'
 license=('MIT')
 options=('staticlibs')
 source=('dotnet.sh')
-source_armv7h=('https://download.visualstudio.microsoft.com/download/pr/28bc9d47-631c-4e28-9e8c-3e8d025cc999/c4302b73c98da0dc26bcb36ed1e148d2/dotnet-sdk-8.0.101-linux-arm.tar.gz')
-source_aarch64=('https://download.visualstudio.microsoft.com/download/pr/092bec24-9cad-421d-9b43-458b3a7549aa/84280dbd1eef750f9ed1625339235c22/dotnet-sdk-8.0.101-linux-arm64.tar.gz')
-source_x86_64=('https://download.visualstudio.microsoft.com/download/pr/9454f7dc-b98e-4a64-a96d-4eb08c7b6e66/da76f9c6bc4276332b587b771243ae34/dotnet-sdk-8.0.101-linux-x64.tar.gz')
+source_armv7h=('https://download.visualstudio.microsoft.com/download/pr/ac99d114-0422-475c-b75b-8279ff9f9a68/19efacb0358aaf945f0a8ad62a8ca718/dotnet-sdk-8.0.204-linux-arm.tar.gz')
+source_aarch64=('https://download.visualstudio.microsoft.com/download/pr/1e449990-2934-47ee-97fb-b78f0e587c98/1c92c33593932f7a86efa5aff18960ed/dotnet-sdk-8.0.204-linux-arm64.tar.gz')
+source_x86_64=('https://download.visualstudio.microsoft.com/download/pr/0a1b3cbd-b4af-4d0d-9ed7-0054f0e200b4/4bcc533c66379caaa91770236667aacb/dotnet-sdk-8.0.204-linux-x64.tar.gz')
 sha512sums=('e61b9e3e5a2305646a616d598378230c9755c5dd5363692cc363f8f4add3807563c324dd86f3a7ae9d358c82d730608e7b293935a2b6c81c0c0f62d752a0a1cf')
-sha512sums_armv7h=('59e0902fa190dee8da1644135e0477ced70fa02ecc12f79c8947743a77a160861ed5e44f8a4228815f853141856d4e3a1db1bd057759d3bff980a79b7d849689')
-sha512sums_aarch64=('56beedb8181b63efd319b028190a8a98842efd96da27c5e48e18c4d15ba1a5805610e8838f1904a19263abd51ff68df369973ed59dab879edc52f6e7f93517c6')
-sha512sums_x86_64=('26df0151a3a59c4403b52ba0f0df61eaa904110d897be604f19dcaa27d50860c82296733329cb4a3cf20a2c2e518e8f5d5f36dfb7931bf714a45e46b11487c9a')
+sha512sums_armv7h=('45230c8f180209c3b8315a3d9825eaa55d1b1dd2c9b427d038890b17987f9ccf4288f4661263862c4a19231a7657562ee09595d7e09799e38d22138f03c49047')
+sha512sums_aarch64=('7000b559efe502e9a799e9fccb6bccc2e39eb21331d6cb2be54f389e357436b84f5ccbcc73245df647749ee32d27f7fb8b7737d449312f0db7dd3409f8e12443')
+sha512sums_x86_64=('b45d3e3bc039d50764bfbe393b26cc929d93b22d69da74af6d35d4038ebcbc2f8410b047cdd0425c954d245e2594755c9f293c09f1ded3c97d33aebfaf878b5f')
 
 package_dotnet-host-bin() {
   pkgdesc='A generic driver for the .NET Core Command Line Interface (binary)'
@@ -86,7 +87,7 @@ package_dotnet-sdk-bin() {
     'dotnet-targeting-pack-bin'
     'netstandard-targeting-pack-bin')
   optdepends=('aspnet-targeting-pack-bin: Build ASP.NET Core applications')
-  provides=("dotnet-sdk-bin" "dotnet-sdk=${pkgver}" "dotnet-sdk-${_short_ver}")
+  provides=("dotnet-sdk-bin" "dotnet-sdk=${pkgver}" "dotnet-sdk-${_short_ver}=${pkgver}")
   conflicts=("dotnet-sdk-bin" "dotnet-sdk=${pkgver}" "dotnet-sdk-${_short_ver}")
 
   install -dm 755 "${pkgdir}"/usr/share/{dotnet,licenses}

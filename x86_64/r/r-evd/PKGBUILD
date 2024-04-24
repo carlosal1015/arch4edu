@@ -1,14 +1,14 @@
 # Maintainer: Guoyi Zhang <guoyizhang at malacology dot net>
 
 _pkgname=evd
-_pkgver=2.3-6.1
+_pkgver=2.3-7
 pkgname=r-${_pkgname,,}
-pkgver=2.3.6.1
-pkgrel=6
-pkgdesc='Functions for Extreme Value Distributions'
-arch=('x86_64')
-url="https://cran.r-project.org/package=${_pkgname}"
-license=('GPL')
+pkgver=${_pkgver//-/.}
+pkgrel=1
+pkgdesc="Functions for Extreme Value Distributions"
+arch=(x86_64)
+url="https://cran.r-project.org/package=$_pkgname"
+license=('GPL-3.0-only')
 depends=(
   r
 )
@@ -16,14 +16,15 @@ optdepends=(
   r-interp
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-sha256sums=('662c592d3f5c5693dbf1c673d1137c4a60a347e330b71be1f3933f201d2c8971')
+md5sums=('8a5fe3fb5097036c69422cd0848ea841')
+b2sums=('6e762331d6bfa6b911a17ed58e9f44c05d6d92899720b9dbf3912b5c8b11266246bb4fcf9e2ea7fef91939f73bcc26ba5bbfea407bb583275fcf3b5b8d9547ff')
 
 build() {
-  R CMD INSTALL ${_pkgname}_${_pkgver}.tar.gz -l "${srcdir}"
+  mkdir build
+  R CMD INSTALL -l build "$_pkgname"
 }
 
 package() {
-  install -dm0755 "${pkgdir}/usr/lib/R/library"
-  cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
+  install -d "$pkgdir/usr/lib/R/library"
+  cp -a --no-preserve=ownership "build/$_pkgname" "$pkgdir/usr/lib/R/library"
 }
-# vim:set ts=2 sw=2 et:
