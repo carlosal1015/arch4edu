@@ -1,23 +1,20 @@
 # Maintainer: Pekka Ristola <pekkarr [at] protonmail [dot] com>
 
 _pkgname=archive
-_pkgver=1.1.7
+_pkgver=1.1.8
 pkgname=r-${_pkgname,,}
 pkgver=${_pkgver//-/.}
 pkgrel=1
 pkgdesc="Multi-Format Archive and Compression Support"
 arch=(x86_64)
-url="https://cran.r-project.org/package=${_pkgname}"
-license=(MIT)
+url="https://cran.r-project.org/package=$_pkgname"
+license=('MIT')
 depends=(
   libarchive
   r-cli
   r-glue
   r-rlang
   r-tibble
-)
-makedepends=(
-  r-cpp11
 )
 checkdepends=(
   r-testthat
@@ -27,12 +24,12 @@ optdepends=(
   r-testthat
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-md5sums=('f3504e5b4704312ce00d704d1e186083')
-sha256sums=('11efd69302d4fbc940b740451a4284cdc348e3401ae70d2de37612130ee07d7c')
+md5sums=('2ccf2ae7f5f07242dd71e879b46cc3e1')
+b2sums=('2db6395d4b8a6fb442eb88c0c73852a7c2b60667600703d3df93a8f0d4eb957e4257238ce5253f05b86361ea57ad600f1dfac03db3c0fb84806912ddb59f619c')
 
 build() {
-  mkdir -p build
-  R CMD INSTALL "$_pkgname" -l build
+  mkdir build
+  R CMD INSTALL -l build "$_pkgname"
 }
 
 check() {

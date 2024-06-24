@@ -3,26 +3,33 @@
 # Contributor: Sandy Carter <bwrsandman@gmail.com>
 
 pkgname=vcmi
-pkgver=1.4.5
+pkgver=1.5.2
 pkgrel=1
 pkgdesc="Open-source engine for Heroes of Might and Magic III"
 arch=('i686' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
 url="http://vcmi.eu"
-license=('GPL2')
-depends=('boost-libs' 'ffmpeg' 'sdl2_image' 'sdl2_mixer' 'sdl2_ttf' 'qt5-base' 'qt5-tools' 'libxkbcommon-x11'
-         'desktop-file-utils' 'gtk-update-icon-cache' 'hicolor-icon-theme' 'onetbb' 'fuzzylite'
-         'luajit')
-makedepends=('boost' 'cmake' 'git' 'ccache')
+license=('GPL-2.0-or-later AND CC-BY-SA-4.0')
+depends=('boost-libs' 'ffmpeg' 'sdl2_image' 'sdl2_mixer' 'sdl2_ttf' 'qt5-base' 'libxkbcommon-x11'
+         'hicolor-icon-theme' 'onetbb' 'fuzzylite' 'luajit')
+makedepends=('boost' 'cmake' 'git' 'ccache' 'qt5-tools' 'minizip')
 optdepends=('innoextract: required by vcmibuilder' 'unshield: required by vcmibuilder' 'unzip: required by vcmibuilder')
 provides=('vcmi')
 conflicts=('vcmi')
 install="${pkgname}.install"
-source=("https://github.com/vcmi/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('107682df28248282b6ac964598754718f9511d0c7e007ffdbd0fa51f87bb0049')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/${pkgname}/${pkgname}/releases/download/${pkgver}/VCMI-Sources.tar.gz")
+sha256sums=('26489cb8a966c6735641eb4068a57a42f0319e37589c2894afd52757b0b137ef')
 
+# workaround
 prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  # VCMI-Sources.tar.gz contains sources, not folder like GitHub releases
+  # so we first need to move it to a proper folder
+  if [ ! -d "$srcdir/$pkgname-$pkgver" ]; then
+    mkdir -p "${startdir}/${pkgname}-${pkgver}"
+    mv "$srcdir"/* "${startdir}/${pkgname}-${pkgver}/"
+    mv "${startdir}/${pkgname}-${pkgver}/" "${srcdir}/${pkgname}-${pkgver}/"
+  fi
 }
+
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   mkdir -p build && cd build
@@ -33,6 +40,7 @@ build() {
     -DCMAKE_SKIP_RPATH='FALSE' \
     -DENABLE_TEST=OFF \
     -DFORCE_BUNDLED_FL=OFF \
+    -DENABLE_INNOEXTRACT=OFF \
     -DCMAKE_BUILD_TYPE='Release' \
     -DCMAKE_CXX_COMPILER_LAUNCHER='ccache' \
     -DCMAKE_C_COMPILER_LAUNCHER='ccache' \

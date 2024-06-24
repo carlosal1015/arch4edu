@@ -6,14 +6,14 @@
 # Contributor: Alex Branham <alex.branham@gmail.com>
 
 _pkgname=evaluate
-_pkgver=0.23
+_pkgver=0.24.0
 pkgname=r-${_pkgname,,}
 pkgver=${_pkgver//-/.}
 pkgrel=1
 pkgdesc="Parsing and Evaluation Tools that Provide More Details than the Default"
 arch=(any)
-url="https://cran.r-project.org/package=${_pkgname}"
-license=(MIT)
+url="https://cran.r-project.org/package=$_pkgname"
+license=('MIT')
 depends=(
   r
 )
@@ -25,12 +25,12 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-md5sums=('f95f31851168165421c128109668a213')
-sha256sums=('c9cf9c37502b8fbfa78e4eb96b8c3d1789060e49505c86c07cb7476da804a45c')
+md5sums=('b0334c46aa126a22105882ae559bcba8')
+b2sums=('a031f7e04180d4fbcd0a317b73d99a47034be0b887622d53bf12adb7949eb5d180dc2a1416751f0916733a29eea4bb13fd88a546495fd80b489b827c86108cda')
 
 build() {
-  mkdir -p build
-  R CMD INSTALL "$_pkgname" -l build
+  mkdir build
+  R CMD INSTALL -l build "$_pkgname"
 }
 
 package() {
