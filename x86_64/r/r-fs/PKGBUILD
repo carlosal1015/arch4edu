@@ -4,14 +4,14 @@
 # Contributor: Alex Branham <alex.branham@gmail.com>
 
 _pkgname=fs
-_pkgver=1.6.3
+_pkgver=1.6.4
 pkgname=r-${_pkgname,,}
 pkgver=${_pkgver//-/.}
 pkgrel=1
 pkgdesc="Cross-Platform File System Operations Based on 'libuv'"
 arch=(x86_64)
-url="https://cran.r-project.org/package=${_pkgname}"
-license=(MIT)
+url="https://cran.r-project.org/package=$_pkgname"
+license=('MIT')
 depends=(
   libuv
   r
@@ -30,10 +30,10 @@ optdepends=(
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz"
         "system-libuv.patch")
-md5sums=('25dc9b509f6a8fba2718ffd2c691124a'
+md5sums=('ee7f7d9c49c0084e18764db238cac915'
          'e9cd06be1a987fd1cdab9b577736bfe0')
-sha256sums=('fa82061e50d7a4d94b7e404f9f2b699e75ae8fbfb575fabdfc2c39f536c0f971'
-            'd03eb4684d9e62ceb77292a10cb6b3e638140f9431b0625a8f8196e0dce14752')
+b2sums=('de3451876c1416b4c3425a7a684558f67cbdd906f67225479e24c0cb19835aa5106afe75f7c0e0a9d7158e5ce5ac074fb8401d0d04071973fcb89067755193f5'
+        'bb5f52cc3b73def81bc7688817dcfcf79b69d9cf2522521d389a78e55002ea22409b9f159a9d7e2a682d59148f3138245bc9e92971ceaa0246727f3fbb7b1bc1')
 
 prepare() {
   # build against system libuv
@@ -41,8 +41,8 @@ prepare() {
 }
 
 build() {
-  mkdir -p build
-  R CMD INSTALL "$_pkgname" -l build
+  mkdir build
+  R CMD INSTALL -l build "$_pkgname"
 }
 
 package() {

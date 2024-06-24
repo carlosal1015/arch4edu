@@ -1,6 +1,6 @@
 # Maintainer: Martin Diehl <aur@martin-diehl.net>
 
-pkgver=0.43.5
+pkgver=0.43.8
 pkgrel=1
 pkgname=python-pyvista
 _name=${pkgname#python-}
@@ -12,7 +12,7 @@ depends=('python-numpy' 'python-pillow' 'python-pooch' 'python-scooby' 'vtk' 'py
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
 optdepends=('python-meshio' 'xorg-server-xvfb' 'python-imageio')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz")
-sha512sums=('21375dab3666946f38e9c1173c3870f95e09132475df636d1afae54e916cba50cd035a9bca632428d25e9fcec38b0f2e1e7e8a30e274ed1d62c32ae9db4153f0')
+sha512sums=('636ddfe46b8bfce8a29f1fb74912de55524feef5511d08942bc5019fafbff63fb5aabb26c69b4d09b78f80e68cf9d8f60058778e241dc2e032eced643a78b07d')
 
 build() {
     cd "$_name-$pkgver"
@@ -22,5 +22,4 @@ build() {
 package() {
     cd "$_name-$pkgver"
     python -m installer --destdir="$pkgdir" dist/*.whl
-    install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }

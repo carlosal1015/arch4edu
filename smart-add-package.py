@@ -70,7 +70,7 @@ def load_provides():
     provides.update(read_provides('util-linux-libs'))
     provides.update(read_provides('pkgconf'))
     provides.update(read_provides('gtest'))
-    provides.update(read_provides('dbus-python'))
+    provides.update(read_provides('python-dbus'))
     provides.update(read_provides('jdk-openjdk'))
     provides.update(read_provides('jre-openjdk'))
     return provides
@@ -145,7 +145,8 @@ if __name__ == '__main__':
 
     for package, info in reversed(resolved.items()):
         pkgbase = info['PackageBase']
-        if pkgbase in pkgbases and pkgbase != args.package:
+
+        if pkgbase in pkgbases and info['Name'] != args.package:
             continue
 
         pkgbase = directory / pkgbase
