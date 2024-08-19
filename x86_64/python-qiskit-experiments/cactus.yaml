@@ -3,7 +3,7 @@ nvchecker:
     aur:
   - alias: python
 depends:
-  - x86_64/python-lmfit
+  - any
   - x86_64/python-qiskit-ibm-experiment
   - x86_64/python-qiskit
 build_prefix: extra-x86_64
