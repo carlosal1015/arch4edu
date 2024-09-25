@@ -3,9 +3,8 @@
 # Contributor: Daniel Milde <daniel@milde.cz>
 # Contributor: Yen Chi Hsuan <yan12125@gmail.com>
 _base=setuptools
-pkgbase=pypy-${_base}
 pkgname=pypy3-${_base}
-pkgver=74.1.2
+pkgver=75.1.0
 pkgrel=1
 epoch=1
 pkgdesc="Easily download, build, install, upgrade, and uninstall Python packages"
@@ -14,7 +13,7 @@ url="https://${_base}.pypa.io"
 license=(MIT)
 makedepends=(pypy3)
 source=(https://pypi.org/packages/source/${_base::1}/${_base}/${_base}-${pkgver}.tar.gz)
-sha512sums=('581cc51bf70fe378ca8dcdb2cbed6056de4c335c7e997ed126cc707a84c52571dfa0379f34e2f8bebf50ab27f4c20c718dd854f1378e3c6d4cf75a094e57a77c')
+sha512sums=('5003e81c7988dd522cfba233ac643ade9a1ff074a13182a81da7fe3f40565b97dd2696c96b8a0694fcd3417e527e2cf6d6ea5e21d29ff927c1ab5916a2607239')
 
 prepare() {
   cd "${srcdir}"/${_base}-${pkgver}
@@ -22,7 +21,7 @@ prepare() {
 }
 
 # Rename the following function to check() to enable checking
-_check_pypy3-setuptools() {
+_check() {
   # Workaround UTF-8 tests by setting LC_CTYPE
 
   # Check pypy3 module
@@ -30,7 +29,7 @@ _check_pypy3-setuptools() {
   LC_CTYPE=en_US.utf8 pypy3 setup.py ptr
 }
 
-package_pypy3-setuptools() {
+package() {
   depends=(pypy3)
   cd "${srcdir}/${_base}-${pkgver}"
   pypy3 setup.py install --prefix=/opt/pypy3 --root="${pkgdir}" --optimize=1
