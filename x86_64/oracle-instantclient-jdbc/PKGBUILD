@@ -6,10 +6,10 @@
 
 _pkgname=instantclient-jdbc
 pkgname=oracle-${_pkgname}
-pkgver=23.4.0.24.05
+pkgver=23.7.0.25.01
 _pkgver_vendor_suffix=
-_urlver=2340000
-_unzippath=instantclient_23_4
+_urlver=2370000
+_unzippath=instantclient_23_7
 pkgrel=1
 pkgdesc="Additional support for XA, Internationalization, and RowSet operations under JDBC"
 arch=('x86_64')
@@ -20,12 +20,13 @@ replaces=('instantclient-jdbc')
 options=(!strip)
 
 source=("https://download.oracle.com/otn_software/linux/instantclient/${_urlver}/${_pkgname}-linux.x64-${pkgver}${_pkgver_vendor_suffix}.zip")
-md5sums=('a4fa4f1f2e65de0b19901168d02c015d')
-sha256sums=('c28ac12015646977749cd78ac5d3213a1d5e45e61ac248559104dd845d7270a3')
+md5sums=('5497ca90dfad38fc755ff524484717af')
+sha256sums=('140481218144a5ccf506cd75a062c86edd47df9c148b3fa3bcb12ca49295b832')
 
 package() {
-	local basedir="$srcdir/${_unzippath}"
+	cd "$srcdir/${_unzippath}"
 	install -d "$pkgdir/usr/lib"
-	install -m 755 -t "$pkgdir/usr/lib" "$basedir/"*.so
-	install -m 644 -t "$pkgdir/usr/lib" "$basedir/"*.jar
+	install -m 755 -t "$pkgdir/usr/lib" *.so
+	install -m 644 -t "$pkgdir/usr/lib" *.jar
+	install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" *LICENSE
 }

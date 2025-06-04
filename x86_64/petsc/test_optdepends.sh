@@ -50,7 +50,7 @@ if [ -f /usr/include/scotch.h ]; then
     SCOTCH_LIBS="${SCOTCH_LIBS},libbz2.so"
   fi
   SCOTCH_LIBS="[${SCOTCH_LIBS}]"
-  CONFOPTS="${CONFOPTS} --with-ptscotch=1"
+  CONFOPTS="${CONFOPTS} --with-ptscotch=1 --with-bison=1"
 fi
 
 # SuperLU_DIST
@@ -61,12 +61,6 @@ fi
 # Triangle
 if [ -f "/usr/lib/libtriangle.so" ]; then
   CONFOPTS="${CONFOPTS} --with-triangle=1"
-fi
-
-# ML (Trilinos)
-if [ -f "/usr/lib/libml.so" ]; then
-  CONFOPTS="${CONFOPTS} --with-ml=1"
-  CONFOPTS="${CONFOPTS} --with-boost=1" # Add boost support (ML requires it)
 fi
 
 # Zoltan

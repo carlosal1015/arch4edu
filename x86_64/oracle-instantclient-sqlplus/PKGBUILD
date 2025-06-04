@@ -6,10 +6,10 @@
 
 _pkgname=instantclient-sqlplus
 pkgname=oracle-${_pkgname}
-pkgver=23.4.0.24.05
+pkgver=23.7.0.25.01
 _pkgver_vendor_suffix=
-_urlver=2340000
-_unzippath=instantclient_23_4
+_urlver=2370000
+_unzippath=instantclient_23_7
 pkgrel=1
 pkgdesc="SQL*Plus for Oracle Instant Client"
 arch=('x86_64')
@@ -20,14 +20,15 @@ replaces=('instantclient-sqlplus')
 options=(!strip)
 
 source=("https://download.oracle.com/otn_software/linux/instantclient/${_urlver}/${_pkgname}-linux.x64-${pkgver}${_pkgver_vendor_suffix}.zip")
-md5sums=('1fc78cc1c4cfbf0ed3436382480d1de8')
-sha256sums=('eb6550aa7ceaaa2824bd951f5fe79e3da81e396accaed59852f7e1a62110b4ed')
+md5sums=('982b20f0b377d13ecdabfc07e9d28d17')
+sha256sums=('0e41ac407c4a51cb8e2754e698c8a9b04f631176c8537668c1803e114b578222')
 
 package() {
-	local basedir="$srcdir/${_unzippath}"
+	cd "$srcdir/${_unzippath}"
 	install -d "$pkgdir/usr/bin"
 	install -d "$pkgdir/usr/lib"
-	install -m 755 -t "$pkgdir/usr/bin" "$basedir/sqlplus"
-	install -m 755 -t "$pkgdir/usr/lib" "$basedir/"*.so
-	install -m 644 -t "$pkgdir/usr/lib" "$basedir/"*.sql
+	install -m 755 -t "$pkgdir/usr/bin" sqlplus
+	install -m 755 -t "$pkgdir/usr/lib" *.so
+	install -m 644 -t "$pkgdir/usr/lib" *.sql
+	install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" *LICENSE
 }

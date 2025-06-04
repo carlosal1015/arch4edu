@@ -1,25 +1,26 @@
 # Maintainer: Martin Diehl <aur@martin-diehl.net>
 
-pkgver=0.44.1
-pkgrel=1
 pkgname=python-pyvista
+pkgver=0.45.2
+pkgrel=1
+pkgdesc='3D plotting and mesh analysis through a streamlined interface for VTK'
+arch=(any)
+url=https://www.pyvista.org
+license=(MIT)
+depends=(python-numpy python-pillow python-pooch python-scooby vtk python-matplotlib)
+optdepends=(python-meshio xorg-server-xvfb python-imageio)
+makedepends=(python-build python-installer python-wheel python-setuptools)
 _name=${pkgname#python-}
-pkgdesc='3D plotting and mesh analysis through a streamlined interface for the Visualization Toolkit (VTK)'
-arch=('any')
-url='https://www.pyvista.org'
-license=('MIT')
-depends=('python-numpy' 'python-pillow' 'python-pooch' 'python-scooby' 'vtk' 'python-matplotlib')
-makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
-optdepends=('python-meshio' 'xorg-server-xvfb' 'python-imageio')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz")
-sha512sums=('b2478f24410b46e9f794e41abc12d5d6d14b21f68400de920b68d9b0c210c5ea8aefba792e52252681b1d0f661c69e791c4d5bfe1262c348fd5ff79a3b1e9e94')
+source=(https://github.com/pyvista/${_name}/archive/v${pkgver}/${_name}-${pkgver}.tar.gz)
+sha512sums=('d5151a32967274eab4c9ca2ec0922118ec97eb2bc24e069d58e33f4cf81d574e18fa98550a2c0293a4519bc46957f6eb7c8a77109060b8fff83773c2396141fc')
 
 build() {
-    cd "$_name-$pkgver"
+    cd ${_name}-${pkgver}
     python -m build --wheel --no-isolation
 }
 
 package() {
-    cd "$_name-$pkgver"
-    python -m installer --destdir="$pkgdir" dist/*.whl
+    cd ${_name}-${pkgver}
+    python -m installer --destdir="${pkgdir}" dist/*.whl
+    install -Dm644 LICENSE -t "${pkgdir}"/usr/share/licenses/${pkgname}
 }

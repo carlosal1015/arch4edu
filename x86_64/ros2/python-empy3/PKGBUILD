@@ -7,7 +7,7 @@ pkgrel=2
 pkgdesc="Powerful and robust templating system for Python"
 arch=('any')
 url="http://www.alcyone.com/software/empy/"
-license=('LGPL')
+license=('BSD-3-Clause')
 depends=('python')
 replaces=('python-empy')
 provides=('python-empy')
@@ -25,3 +25,4 @@ package() {
   cd $_pkgname-$pkgver
   python3 setup.py install --root="$pkgdir" --optimize=1
 }
+epoch=1

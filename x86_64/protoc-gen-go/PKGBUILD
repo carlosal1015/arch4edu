@@ -2,18 +2,20 @@
 # Contributor: Aliaksandr Mianzhynski <amenzhinsky@gmail.com>
 
 pkgname="protoc-gen-go"
-pkgver=1.35.1
+pkgver=1.36.6
 pkgrel=1
 pkgdesc="Go support for Google's protocol buffers"
-arch=('x86_64' 'aarch64' 'i686')
+arch=('aarch64' 'i686' 'x86_64')
 url="https://github.com/protocolbuffers/protobuf-go"
 license=('BSD-3-Clause')
-depends=('glibc')
+depends=('glibc' 'protobuf')
 makedepends=('go')
-optdepends=('protobuf: protoc generator')
+provides=('protobuf-go')
+conflicts=('protobuf-go')
+replaces=('protobuf-go')
 _pkgsrc="protobuf-go-${pkgver}"
 source=("${_pkgsrc}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('7cead1a711d682796b343931a9b54b3b07dd83456baeda6c069432235de45437')
+sha256sums=('afa2b0e8f86d6da9d09c51ab4270d93c2888327220316982be9db345f523a6a1')
 
 prepare() {
   cd "${srcdir}/${_pkgsrc}"
@@ -37,8 +39,8 @@ check() {
 
 package() {
   cd "${srcdir}/${_pkgsrc}"
-  install -Dm755 "build/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
-  install -Dm644 "README.md" "${pkgdir}/usr/share/doc/${pkgname}/README.md"
-  install -Dm644 "PATENTS"   "${pkgdir}/usr/share/doc/${pkgname}/PATENTS"
-  install -Dm644 "LICENSE"   "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -vDm755 "build/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  install -vDm644 "README.md" "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+  install -vDm644 "PATENTS"   "${pkgdir}/usr/share/doc/${pkgname}/PATENTS"
+  install -vDm644 "LICENSE"   "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

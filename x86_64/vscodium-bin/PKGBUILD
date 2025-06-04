@@ -7,7 +7,7 @@
 
 pkgname=vscodium-bin
 _pkgname=VSCodium
-pkgver=1.94.2.24286
+pkgver=1.100.33714
 pkgrel=1
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64' 'aarch64')
@@ -26,12 +26,12 @@ conflicts=('vscodium')
 install=$pkgname.install
 
 sha256sums=('3a5bc109974fcf408855c13965f6d6be0997655c5b359de0bfd19a678c00844e'
-            '6eef345b65bf2679c928c763529540435ab9c6e1836917319810a7a2d484ae1b'
+            '121f2db8a65cfc74c10d3e7c3135b62b66297cf27f8f7f00c3ad29d412e968b7'
             '01ba3d33e76804e2346d08f4eda256a29610c9eb59432e4b016d05ad93d901ba'
             '63b9f3e07dcfe92f59e851fdeeaed6ee986950672f75cc950489bce67e85d884'
-            'ef5759114cb0bada639bf89b778679bc7cf4d829151dc5fbf95eb33df4addcd6')
-sha256sums_x86_64=('fba1c57ecc8998e0c52360f2c97266a423aafc06fdf3bce3bb279290ab235c19')
-sha256sums_aarch64=('e87593257a058461702f226966f04d3904f8e37e2dfad90b4a14556ee98da835')
+            '07f0314b1869e3666f1ba52cd02dd40c841beef11a1ab9ae3246cafd01ef6caa')
+sha256sums_x86_64=('e332ccab020531f79906e1c399a391c7e04af6fab17b448cc12294caa558b5bf')
+sha256sums_aarch64=('adfb1f816997db8efcdd533db2b702647348782495d48f49ecda058ed5ea7417')
 
 source=('vscodium-bin.desktop'
         'vscodium-bin-url-handler.desktop'
@@ -55,6 +55,8 @@ package() {
   install -D -m644 "${srcdir}/vscodium-bin-url-handler.desktop" "${pkgdir}/usr/share/applications/codium-url-handler.desktop"
   install -D -m644 "${srcdir}/resources/app/resources/linux/code.png" \
           "${pkgdir}/usr/share/pixmaps/vscodium.png"
+  install -D -m644 "${srcdir}/resources/app/resources/linux/code.png" \
+          "${pkgdir}/usr/share/icons/hicolor/1024x1024/apps/vscodium.png"
   install -m755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/codium"
 
   # Fix chrome-sandbox permissions

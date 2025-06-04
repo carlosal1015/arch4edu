@@ -4,7 +4,7 @@
 # Contributor: Alex Branham <branham@utexas.edu>
 
 _pkgname=processx
-_pkgver=3.8.4
+_pkgver=3.8.6
 pkgname=r-${_pkgname,,}
 pkgver=${_pkgver//-/.}
 pkgrel=1
@@ -28,8 +28,8 @@ optdepends=(
   r-withr
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-md5sums=('57e96dd74090594f1b1a63ec1d59091b')
-b2sums=('a5657b616af5cfd1a911ff4c5d9f61c7cf75aa4cb0f4580eee3f4686e8dc39e40bd19132f44ec28cb32db0f789443c2c5c342a7e6d2065078f13f38dbb34aa99')
+md5sums=('86aecfcfff69604270a50521861243b3')
+b2sums=('dcdf6b5c7950373a0096bc9dc07af45e6ac7e96f0e75612c3a4bb3849491a89b678a6769e0cf456b5d927c3f1fd2ea0015b5769a8098f5cf158f94e9679edb16')
 
 build() {
   mkdir build

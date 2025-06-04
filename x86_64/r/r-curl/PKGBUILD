@@ -6,7 +6,7 @@
 # Contributor: Alex Branham <branham@utexas.edu>
 
 _pkgname=curl
-_pkgver=5.2.3
+_pkgver=6.2.3
 pkgname=r-${_pkgname,,}
 pkgver=${_pkgver//-/.}
 pkgrel=1
@@ -29,8 +29,8 @@ optdepends=(
   r-webutils
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-md5sums=('36b6d39bf326b7c82f0c8f907f53b601')
-b2sums=('992298d09e21cbf835b78e8fbbdf92e3b42cdab71b1318bf0a3bd3eacf7659a353e152a3e5045da8e0388b9d3bf00ded2b0398667e63cf1c9f605b4e293b0c40')
+md5sums=('8227c4a6ba7040b9e15fd333ddf22fca')
+b2sums=('e376572f4ac3f44793dcce1ae85c5256843d4899c5888c9c61bc2c1a7a887853493f5066c2c7286ea1dc815de7de9ae56f603db6e9691244ac82e88f01604949')
 
 build() {
   mkdir build

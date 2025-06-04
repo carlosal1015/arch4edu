@@ -2,24 +2,29 @@
 # Contributor: Javier Tiá <javier dot tia at gmail dot com>
 
 # options
-: ${_commit:=2d111f2f346b974cf86dcd9de0738e81e017c07f} # 2024.8.2.r4
+: ${_ver_clang=}
+: ${_ver_jdk:=21}
 
 : ${_install_path:=usr/lib}
 
-# basic info
+: ${_commit:=59503c7449e9557fa43490f2fa8a0183d05480a2} # 2025.4.1
+
 _pkgname="sourcetrail"
 pkgname="$_pkgname"
-pkgver=2024.8.2
-pkgrel=1
+pkgver=2025.4.1
+pkgrel=2
 pkgdesc='Interactive source explorer for C/C++ and Java'
-url='https://github.com/xiota/sourcetrail'
+url="https://github.com/petermost/Sourcetrail"
 license=('GPL-3.0-only')
 arch=('x86_64')
 
 depends=(
-  "clang"
-  "llvm-libs"
-  'boost-libs'
+  "clang${_ver_clang:-}"
+  "llvm${_ver_clang:-}-libs"
+  'libboost_chrono.so'          # boost-libs
+  'libboost_filesystem.so'      # boost-libs
+  'libboost_program_options.so' # boost-libs
+  'libboost_thread.so'          # boost-libs
   'qt6-5compat'
   'qt6-base'
   'qt6-svg'
@@ -27,13 +32,13 @@ depends=(
   'tinyxml'
 )
 makedepends=(
-  "llvm"
-  "lld"
+  "java-environment=${_ver_jdk:?}"
+  "lld${_ver_clang:-}"
+  "llvm${_ver_clang:-}"
 
   'boost'
   'cmake'
   'git'
-  'jdk-openjdk'
   'maven'
   'ninja'
 
@@ -42,35 +47,68 @@ makedepends=(
 )
 optdepends=(
   'java-runtime'
-  'python'
 )
 
-_pkgsrc="$_pkgname"
+_pkgsrc="petermost.sourcetrail"
 source=("$_pkgsrc"::"git+$url.git#commit=$_commit")
 sha256sums=('SKIP')
 
 prepare() {
   magick "$_pkgsrc/bin/app/data/gui/icon/logo_1024_1024.png" -resize 256x256 "$_pkgname.png"
+
+  # prevent failure from checkVersionRange
+  sed 's/FATAL_ERROR/WARNING/' -i "$_pkgsrc"/cmake/Sourcetrail.cmake
+
+  # boost 1.88
+  local _line=$(grep -nm1 'boost/process/v1\.hpp' "$_pkgsrc"/src/lib_gui/utility/utilityApp.cpp | cut -d':' -f1)
+  sed -e "${_line}d" -i "$_pkgsrc"/src/lib_gui/utility/utilityApp.cpp
+  sed -e "${_line}i #define BOOST_PROCESS_VERSION 1" \
+    -e "${_line}i #include <boost/process/v1/args.hpp>" \
+    -e "${_line}i #include <boost/process/v1/async.hpp>" \
+    -e "${_line}i #include <boost/process/v1/async_system.hpp>" \
+    -e "${_line}i #include <boost/process/v1/group.hpp>" \
+    -e "${_line}i #include <boost/process/v1/child.hpp>" \
+    -e "${_line}i #include <boost/process/v1/cmd.hpp>" \
+    -e "${_line}i #include <boost/process/v1/env.hpp>" \
+    -e "${_line}i #include <boost/process/v1/environment.hpp>" \
+    -e "${_line}i #include <boost/process/v1/error.hpp>" \
+    -e "${_line}i #include <boost/process/v1/exe.hpp>" \
+    -e "${_line}i #include <boost/process/v1/group.hpp>" \
+    -e "${_line}i #include <boost/process/v1/handles.hpp>" \
+    -e "${_line}i #include <boost/process/v1/io.hpp>" \
+    -e "${_line}i #include <boost/process/v1/pipe.hpp>" \
+    -e "${_line}i #include <boost/process/v1/shell.hpp>" \
+    -e "${_line}i #include <boost/process/v1/search_path.hpp>" \
+    -e "${_line}i #include <boost/process/v1/spawn.hpp>" \
+    -e "${_line}i #include <boost/process/v1/system.hpp>" \
+    -e "${_line}i #include <boost/process/v1/start_dir.hpp>" \
+    -i "$_pkgsrc"/src/lib_gui/utility/utilityApp.cpp
 }
 
-build() {
+build() (
   export CC=clang
   export CXX=clang++
-  export LDFLAGS+=" -fuse-ld=lld"
 
-  #export Clang_DIR="/usr/lib/cmake/clang"
-  #export LLVM_DIR="/usr/lib/cmake/llvm"
+  local _ldflags=($LDFLAGS)
+  export LDFLAGS="${_ldflags[@]//*fuse-ld*/} -fuse-ld=lld"
+
+  export PATH="/usr/lib/llvm${_ver_clang:-}/bin:$PATH"
+  export LD_LIBRARY_PATH="/usr/lib/llvm${_ver_clang:-}/lib"
+
+  export Clang_DIR="/usr/lib/llvm${_ver_clang:-}/cmake/clang"
+  export LLVM_DIR="/usr/lib/llvm${_ver_clang:-}/cmake/llvm"
+
+  export JAVA_HOME="/usr/lib/jvm/java-${_ver_jdk}-openjdk"
 
   local _cmake_options=(
     -B build
     -S "$_pkgsrc"
     -G Ninja
-    -DCMAKE_BUILD_TYPE="Release"
-    -DCMAKE_INSTALL_PREFIX='/usr'
-
+    -DCMAKE_BUILD_TYPE=None
     -DBUILD_CXX_LANGUAGE_PACKAGE=ON
     -DBUILD_JAVA_LANGUAGE_PACKAGE=ON
-    -DBUILD_PYTHON_LANGUAGE_PACKAGE=ON
+    -DBUILD_PYTHON_LANGUAGE_PACKAGE=OFF # prebuilt modules don't work on Arch
+    -DBUILD_UNIT_TESTS_PACKAGE=OFF
     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
     -DCMAKE_VERBOSE_MAKEFILE=OFF
     -Wno-dev
@@ -78,33 +116,26 @@ build() {
 
   cmake "${_cmake_options[@]}"
   cmake --build build
-}
+)
 
 package() {
   # binaries
-  install -Dm755 "build/app/sourcetrail_indexer" -t "$pkgdir/$_install_path/$_pkgname/"
   install -Dm755 "build/app/Sourcetrail" "$pkgdir/$_install_path/$_pkgname/$_pkgname"
-  patchelf --add-rpath "/$_install_path/sourcetrail" "$pkgdir/$_install_path/$_pkgname/$_pkgname"
+  patchelf --add-rpath '$ORIGIN' "$pkgdir/$_install_path/$_pkgname/$_pkgname"
+
+  install -Dm755 "build/app/sourcetrail_indexer" -t "$pkgdir/$_install_path/$_pkgname/"
+  patchelf --add-rpath '$ORIGIN' "$pkgdir/$_install_path/$_pkgname"/sourcetrail_indexer
 
   # data
-  local _data_path="$pkgdir/$_install_path/$_pkgname/data"
-  install -dm755 "$_data_path"
-  for i in color_schemes fallback fonts gui java license syntax_highlighting_rules; do
-    cp -a "$_pkgsrc/bin/app/data/$i" "$_data_path/"
-  done
-
-  # languages
-  for i in cxx java python; do
-    cp -a "build/app/data/$i" "$_data_path/"
-  done
-
-  # examples
-  cp -a "$_pkgsrc"/bin/app/user/projects "$_data_path/fallback/"
+  local _path="$pkgdir/$_install_path/$_pkgname"
+  install -dm755 "$_path"
+  cp -a "$_pkgsrc/bin/app"/{data,user} "$_path/"
+  cp -a "build/app/data"/{cxx,java} "$_path/data/"
 
   # icon
   install -Dm644 "$_pkgname.png" "$pkgdir/usr/share/pixmaps/$_pkgname.png"
 
-  # desktop file
+  # launcher
   install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/$_pkgname.desktop" << END
 [Desktop Entry]
 Type=Application
@@ -114,22 +145,15 @@ Exec=$_pkgname
 Icon=$_pkgname
 Terminal=false
 StartupNotify=true
-Categories=Development;
+StartupWMClass=Sourcetrail
 MimeType=application/x-sourcetrail;
+Categories=Development;
 END
 
   # script
   install -Dm755 /dev/stdin "$pkgdir/usr/bin/$_pkgname" << END
 #!/usr/bin/env bash
-: \${XDG_CONFIG_HOME:=\$HOME/.config}
-
 SOURCETRAIL_PATH=/$_install_path/$_pkgname
-CONFIG_PATH="\$XDG_CONFIG_HOME/Sourcetrail"
-
-if [ ! -e "\$CONFIG_PATH" ]; then
-  mkdir -p "\$CONFIG_PATH"
-  cp --reflink=auto -r "\$SOURCETRAIL_PATH/data/fallback"/* "\$CONFIG_PATH/"
-fi
 
 export QT_XKB_CONFIG_ROOT="/usr/share/X11/xkb:\$QT_XKB_CONFIG_ROOT"
 export QT_QPA_FONTDIR="\$SOURCETRAIL_PATH/data/fonts:\$QT_QPA_FONTDIR"
@@ -139,6 +163,6 @@ export OPENSSL_CONF=/etc/ssl/
 exec \$SOURCETRAIL_PATH/$_pkgname "\$@"
 END
 
-  # fix permissions
+  # permissions
   chmod -R u+rwX,go+rX,go-w "$pkgdir/"
 }
