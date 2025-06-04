@@ -11,23 +11,23 @@ pkgname=(
   'dotnet-targeting-pack-bin'
   'aspnet-targeting-pack-bin'
  )
-pkgver=8.0.8.sdk401
-_runtimever=8.0.8
-_sdkver=8.0.401
-_short_ver=8.0
+pkgver=9.0.5.sdk300
+_runtimever=9.0.5
+_sdkver=9.0.300
+_short_ver=9.0
 pkgrel=1
 arch=('x86_64' 'armv7h' 'aarch64')
 url='https://www.microsoft.com/net/core'
 license=('MIT')
 options=('staticlibs')
 source=('dotnet.sh')
-source_armv7h=('https://download.visualstudio.microsoft.com/download/pr/788ca4e7-c3ea-405d-9f82-2d362d4a08f6/d54b1aefd4048bcf4eebb24edfc6aeb9/dotnet-sdk-8.0.401-linux-arm.tar.gz')
-source_aarch64=('https://download.visualstudio.microsoft.com/download/pr/14742499-fc32-461e-bdb8-67b147763eee/c14113944f734526153f1aaac38ddfca/dotnet-sdk-8.0.401-linux-arm64.tar.gz')
-source_x86_64=('https://download.visualstudio.microsoft.com/download/pr/db901b0a-3144-4d07-b8ab-6e7a43e7a791/4d9d1b39b879ad969c6c0ceb6d052381/dotnet-sdk-8.0.401-linux-x64.tar.gz')
-sha512sums=('dbb0633698b82bcc2c87c714b9f8f41b474133e8da65f4f13713d302905af65e0a1c796766deb60e00de0761e0fa8015cb3858f5ac8691e4e1cbd117ac105447')
-sha512sums_armv7h=('fb90a8e52f5dd29e5953e4662cc9d57caa96dc6a8f6ff6cfae17947aa8a3f53b5fef1bb35b8c05815fa1cafbdc73179f7296ce846bf5769ee12c9daf5bd27941')
-sha512sums_aarch64=('e8738b21351d030a83be644571f3674c8dda9e6fbd360b221907a7108fab02becd18e1331907535a1294d8c4d0f608519674c27c77dc2c2803cc53cce3e10e0d')
-sha512sums_x86_64=('4d2180e82c963318863476cf61c035bd3d82165e7b70751ba231225b5575df24d30c0789d5748c3a379e1e6896b57e59286218cacd440ffb0075c9355094fd8c')
+source_armv7h=('https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.300/dotnet-sdk-9.0.300-linux-arm.tar.gz')
+source_aarch64=('https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.300/dotnet-sdk-9.0.300-linux-arm64.tar.gz')
+source_x86_64=('https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.300/dotnet-sdk-9.0.300-linux-x64.tar.gz')
+sha512sums=('768151c7179fb6a126b3de9cae01e363e8894f6fab384b1e2c5066c2adca4578638983b1b62aea10dd18045e6d6e8f8ea13280481134de94f004a118919b2c06')
+sha512sums_armv7h=('ca20957d3f4a09bffb86bb21b1379ff19bc62907b50d37090bb705f28064b064131aa01ca4328a29ac66365ee5539fd3152efe79c61294ad7958b19e6114d4de')
+sha512sums_aarch64=('c3c48b256eaf0a662412dc8cfbfa387bb97f3af84ae9cb1aba53f2d34afa5ee735c87b979549ce97eb3aa451c12bd3b10e6453eea6d4ac096d9eeecaedaad540')
+sha512sums_x86_64=('dcab6daef3164390d09edc169d4bf8ec3480af1288e9766c07d20d3c7b70517d263083c3900381fda59c3a7f0aef3fd75ee4f604173c889e8222d6449091d843')
 
 package_dotnet-host-bin() {
   pkgdesc='A generic driver for the .NET Core Command Line Interface (binary)'
@@ -53,7 +53,6 @@ package_dotnet-runtime-bin() {
     'gcc-libs'
     'glibc'
     'icu'
-    'libgssapi_krb5.so'
     'libunwind'
     'zlib'
     'openssl'
@@ -85,8 +84,10 @@ package_dotnet-sdk-bin() {
     'gcc-libs'
     'dotnet-runtime-bin'
     'dotnet-targeting-pack-bin'
-    'netstandard-targeting-pack-bin')
-  optdepends=('aspnet-targeting-pack-bin: Build ASP.NET Core applications')
+    'netstandard-targeting-pack-bin'
+    'aspnet-runtime-bin'
+    'aspnet-targeting-pack-bin'
+  )
   provides=("dotnet-sdk-bin" "dotnet-sdk=${pkgver}" "dotnet-sdk-${_short_ver}=${pkgver}")
   conflicts=("dotnet-sdk-bin" "dotnet-sdk=${pkgver}" "dotnet-sdk-${_short_ver}")
 

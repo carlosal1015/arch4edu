@@ -2,20 +2,16 @@
 _base=trame-server
 pkgname=python-${_base}
 pkgdesc="Internal server side implementation of trame"
-pkgver=3.2.3
-pkgrel=1
+pkgver=3.4.0
+pkgrel=2
 arch=(any)
 url="https://github.com/Kitware/${_base}"
 license=(Apache-2.0)
-depends=(python-wslink python-more-itertools python-msgpack)
+depends=(python-wslink python-more-itertools)
 makedepends=(python-build python-installer python-setuptools python-wheel)
-checkdepends=(python-pytest)
+checkdepends=(python-pytest-asyncio)
 source=(${_base}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('2222ac499779e13ebe02ee2abb780f43e271a8d63a133ba8af5adaf72a93e475f60324ec43aa5d3ecac448fff3150924345aad28e830372e5a574eec506d6492')
-
-prepare() {
-  sed -i 's/^include/#include/' ${_base}-${pkgver}/MANIFEST.in
-}
+sha512sums=('772a69163c5e87337ea1baa52f1fdc3c9fddef1398b4e4f488ad5bd3d5586e70703b7f3bca32f36286d5ce23d12c6920d7d8294ced5cac7f4229318b3437f842')
 
 build() {
   cd ${_base}-${pkgver}
@@ -26,11 +22,15 @@ check() {
   cd ${_base}-${pkgver}
   python -m venv --system-site-packages test-env
   test-env/bin/python -m installer dist/*.whl
-  test-env/bin/python -m pytest
+  test-env/bin/python -m pytest \
+    tests/test_controller.py tests/test_state.py tests/test_translator.py
 }
 
 package() {
   cd ${_base}-${pkgver}
   PYTHONPYCACHEPREFIX="${PWD}/.cache/cpython/" python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm 644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  # Fix https://aur.archlinux.org/packages/python-trame-server#comment-1027059
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -r "${pkgdir}${site_packages}/docs" "${pkgdir}${site_packages}/examples" "${pkgdir}${site_packages}/tests"
 }

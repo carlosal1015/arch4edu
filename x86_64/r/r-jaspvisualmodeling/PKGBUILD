@@ -1,8 +1,8 @@
 #Maintainer: sukanka <su975853527 AT gmail.com>
 _pkgname=jaspVisualModeling
-_pkgver=0.18.3
+_pkgver=0.19.3
 pkgname=r-${_pkgname,,}
-pkgver=0.18.3
+pkgver=0.19.3
 pkgrel=1
 pkgdesc="Visual Modeling Module for JASP"
 arch=('any')
@@ -11,10 +11,11 @@ license=('GPL')
 depends=(r
   r-flexplot
   r-jaspbase
+  r-jaspdescriptives
   r-jaspgraphs
 )
 source=("${_pkgname}_${_pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
-sha256sums=('318b01b44948194b33fb00d638484ef4e68d9c03d32058a09c5dfe49b0d2570d')
+sha256sums=('b7d8318fe96b07172207dde677d00686d8ce33a9507616fd81c383413c2cc480')
 
 
 build() {

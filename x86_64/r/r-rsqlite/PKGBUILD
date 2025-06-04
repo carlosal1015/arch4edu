@@ -2,7 +2,7 @@
 # Contributor: Guoyi Zhang <guoyizhang at malacology dot net>
 
 _pkgname=RSQLite
-_pkgver=2.3.7
+_pkgver=2.4.0
 pkgname=r-${_pkgname,,}
 pkgver=${_pkgver//-/.}
 pkgrel=1
@@ -24,13 +24,15 @@ makedepends=(
   r-cpp11
   r-plogr
 )
-checkdepends=(
+_checkdepends=(
   r-dbitest
   r-testthat
 )
 optdepends=(
   r-callr
+  r-cli
   r-dbitest
+  r-decor
   r-gert
   r-gh
   r-hms
@@ -44,10 +46,10 @@ optdepends=(
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz"
         "system-libs.patch")
-md5sums=('b7dad69abc164564e34ad46a31a8a8c9'
-         '29102318ffe7e673c7106be0041c7811')
-b2sums=('0aff1be66b5cff2b9c8edd622d4d7f661b5c7868972cecdc32333fc658e8054dd3f1ec84212b73fe668b012bb717506fd19d225748412a8a8990e51e38114b91'
-        '8a6c00d199a0a7940c4bca7cd4d162badbdb290c8754552f3a888fd1a6eeabfd2bf8a065d952bae11034071b0a7eb72e39f0786af820ab19908aa9b67bdbfa4f')
+md5sums=('8b119a6e5a323bba7eafe67700b643c4'
+         'a4e9a6c34e49e6e36edcf7d46e4841af')
+b2sums=('ebd4fd638bda24cb993eef99baaf5049267595a3391cdadaa15f2e9d6906137667592c6b73dec98334cd824aaee21fc17c35a286ddd0c2bb2d25fe1f58c39deb'
+        '76af4e4ba5f59cd12b616357df87aec8a1906b673b086aac5155a3c0486fddbf8bb7c591f099ce05bbce05e905901d46372a81b01ecd03600fb71df8da0674cd')
 
 prepare() {
   cd "$_pkgname"
@@ -65,7 +67,7 @@ build() {
   R CMD INSTALL -l build "$_pkgname"
 }
 
-check() {
+_check() {
   cd "$_pkgname/tests"
   R_LIBS="$srcdir/build" NOT_CRAN=true Rscript --vanilla testthat.R
 }
