@@ -12,7 +12,7 @@
 
 _pkgname=qgis
 pkgname="$_pkgname"-ltr
-pkgver=3.40.6
+pkgver=3.40.8
 pkgrel=1
 pkgdesc='Geographic Information System (GIS); Long Term Release'
 arch=(x86_64)
@@ -28,8 +28,8 @@ optdepends=('fcgi: Map server'
             'gpsbabel: GPS Tools plugin')
 provides=("$_pkgname=$pkgver")
 conflicts=("$_pkgname")
-source=(https://qgis.org/downloads/$_pkgname-$pkgver.tar.bz2)
-sha256sums=('dd68d39a2a29326031195bed2125e8b0fa7112fe9ee74d5f9850d06b02cef6a8')
+source=("https://qgis.org/downloads/$_pkgname-$pkgver.tar.bz2")
+sha256sums=('17b9ad47e964b676c32f5228d3fad668338404c14fc991657363914e4317ed4f')
 # curl -s https://download.qgis.org/downloads/qgis-latest-ltr.tar.bz2.sha256
 
 build() {
