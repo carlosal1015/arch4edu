@@ -1,10 +1,10 @@
 nvchecker:
   - source: aur
     aur:
-  - alias: python
 depends:
-  - x86_64/micromamba
-  - any/python-boltons
+  - x86_64/llvm17: llvm17-libs
+makedepends:
+  - x86_64/llvm17
 build_prefix: extra-x86_64
 pre_build: aur-pre-build
 post_build: aur-post-build
