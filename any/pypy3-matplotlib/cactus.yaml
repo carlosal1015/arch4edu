@@ -4,6 +4,7 @@ nvchecker:
 depends:
   - any/pypy3-contourpy
   - any/pypy3-cycler
+  - any/pypy3-dateutil
   - any/pypy3-fonttools
   - any/pypy3-kiwisolver
   - any/pypy3-numpy
@@ -14,6 +15,7 @@ makedepends:
   - any/meson-pypy3
   - any/pypy3-build
   - any/pypy3-installer
+  - any/pypy3-pybind11
   - any/pypy3-setuptools-scm
 build_prefix: extra-x86_64
 makepkg_args: --nocheck

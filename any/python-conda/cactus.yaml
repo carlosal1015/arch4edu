@@ -5,6 +5,7 @@ nvchecker:
 depends:
   - any/python-archspec
   - any/python-boltons
+  - any/python-conda-libmamba-solver
   - any/python-conda-package-handling
   - x86_64/micromamba
 build_prefix: extra-x86_64

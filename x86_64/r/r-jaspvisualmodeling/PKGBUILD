@@ -1,8 +1,8 @@
 #Maintainer: sukanka <su975853527 AT gmail.com>
 _pkgname=jaspVisualModeling
-_pkgver=0.19.3
+_pkgver=0.95.3
 pkgname=r-${_pkgname,,}
-pkgver=0.19.3
+pkgver=0.95.3
 pkgrel=1
 pkgdesc="Visual Modeling Module for JASP"
 arch=('any')
@@ -15,7 +15,7 @@ depends=(r
   r-jaspgraphs
 )
 source=("${_pkgname}_${_pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
-sha256sums=('b7d8318fe96b07172207dde677d00686d8ce33a9507616fd81c383413c2cc480')
+sha256sums=('dd024ca0517129301e6a2495a079a636b965f1473b936e9694a36bb8bc3478d0')
 
 
 build() {
@@ -26,6 +26,4 @@ build() {
 package() {
   install -dm0755 "${pkgdir}/usr/lib/R/library"
   cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
-  mkdir -p  ${pkgdir}/usr/lib/jasp-desktop/Modules
-  ln -s /usr/lib/R/library ${pkgdir}/usr/lib/jasp-desktop/Modules/${_pkgname}
 }

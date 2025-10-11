@@ -1,0 +1,33 @@
+# Maintainer: Gerasimos Chourdakis <chourdak at in dot tum dot de>
+# Maintainer: Carlos Aznarán <caznaranl@uni.pe>
+_base=profiling
+pkgname=precice-${_base}
+pkgdesc="A tool for post-processing and analyzing preCICE profiling data"
+pkgver=2.0.3
+pkgrel=2
+arch=(any)
+url="https://github.com/precice/${_base}"
+license=(MIT)
+depends=(python-typing_extensions python-orjson python-polars python-matplotlib graphviz)
+makedepends=(python-build python-installer python-setuptools-git-versioning git)
+checkdepends=(python-pytest)
+source=(git+${url}.git#tag=v${pkgver})
+sha512sums=('1359891cea883d8071af758e37e0afff9da87cfe9d7f344c2af41979fe5ba32c148bbd4c7cc1240422d4f8a1104d015433028f55e03adf90be18d07f757e0b11')
+
+build() {
+  cd ${_base}
+  python -m build --wheel --skip-dependency-check --no-isolation
+}
+
+check() {
+  cd ${_base}
+  python -m venv --system-site-packages test-env
+  test-env/bin/python -m installer dist/*.whl
+  test-env/bin/python -m pytest tests
+}
+
+package() {
+  cd ${_base}
+  PYTHONPYCACHEPREFIX="${PWD}/.cache/cpython/" python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm 644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}

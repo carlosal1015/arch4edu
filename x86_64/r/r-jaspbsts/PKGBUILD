@@ -1,8 +1,8 @@
 #Maintainer: sukanka <su975853527 AT gmail.com>
 _pkgname=jaspBsts
-_pkgver=0.19.3
+_pkgver=0.95.3
 pkgname=r-${_pkgname,,}
-pkgver=0.19.3
+pkgver=0.95.3
 pkgrel=1
 pkgdesc="Bsts Module for JASP"
 arch=('any')
@@ -19,7 +19,7 @@ depends=(r
 )
 optdepends=(r-testthat)
 source=("${_pkgname}_${_pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
-sha256sums=('3417b80ca64d796762d71e5d3bff17816226c8b722e31a6ceb476604bf3829d8')
+sha256sums=('b3da7e6c24d916b1fc1819f1348cce2f296a3c0b15f3e90d0dd64c2814b98328')
 
 
 build() {
@@ -30,6 +30,4 @@ build() {
 package() {
   install -dm0755 "${pkgdir}/usr/lib/R/library"
   cp -a --no-preserve=ownership "${_pkgname}" "${pkgdir}/usr/lib/R/library"
-  mkdir -p  ${pkgdir}/usr/lib/jasp-desktop/Modules
-  ln -s /usr/lib/R/library ${pkgdir}/usr/lib/jasp-desktop/Modules/${_pkgname}
 }

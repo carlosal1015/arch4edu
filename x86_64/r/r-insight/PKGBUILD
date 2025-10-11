@@ -1,7 +1,7 @@
 # Maintainer: Guoyi Zhang <guoyizhang at malacology dot net>
 
 _pkgname=insight
-_pkgver=1.3.0
+_pkgver=1.4.2
 pkgname=r-${_pkgname,,}
 pkgver=${_pkgver//-/.}
 pkgrel=1
@@ -40,6 +40,7 @@ optdepends=(
   r-crch
   r-curl
   r-datawizard
+  r-dbarts
   r-effectsize
   r-emmeans
   r-epir
@@ -85,11 +86,13 @@ optdepends=(
   r-metafor
   r-metaplus
   r-mice
+  r-mhurdle
   r-mlogit
   r-mmrm
   r-modelbased
   r-multgee
   r-mumin
+  r-mvtnorm
   r-nestedlogit
   r-nonnest2
   r-ordinal
@@ -100,7 +103,6 @@ optdepends=(
   r-performance
   r-phylolm
   r-plm
-  r-poorman
   r-proreg
   r-pscl
   r-psych
@@ -114,8 +116,10 @@ optdepends=(
   r-rstanarm
   r-rstantools
   r-rstudioapi
+  r-sampleselection
   r-sandwich
   r-serp
+  r-sdmtmb
   r-speedglm
   r-statmod
   r-survey
@@ -132,8 +136,8 @@ optdepends=(
   r-rwiener
 )
 source=("https://cran.r-project.org/src/contrib/${_pkgname}_${_pkgver}.tar.gz")
-md5sums=('4e13791ea336aa387aeba3295f36456c')
-b2sums=('e5730ea6515cd540980a67270808246810c460c565bb9d54dec3c61bfc6b25feda0411ee89d27fd59f8e58a09e728883c4b1c0910fb56fd48a59ebd45617d3bf')
+md5sums=('9304cba2f7cd8c88c289253c6974525f')
+b2sums=('a2d0018e777167a5e832c182f7141410bb6b12c43f68b7c8271d6ef6ee9395233a1c5eb7fc8f970e09674488b21444592f247fc3b4ff889b5c00c9baddb03044')
 
 build() {
   mkdir build
