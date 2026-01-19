@@ -1,8 +1,8 @@
 # Maintainer: Carlos Aznarán <caznaranl@uni.pe>
 pkgname=dolfinx
 pkgdesc="Next generation FEniCS problem solving environment"
-pkgver=0.9.0.post1
-pkgrel=2
+pkgver=0.10.0.post5
+pkgrel=1
 arch=(x86_64)
 url="https://github.com/FEniCS/${pkgname}"
 license=(LGPL-3.0-or-later GPL-3.0-or-later)
@@ -14,7 +14,7 @@ checkdepends=(catch2)
 #   'parmetis: for parallel graph partitioning'
 #   'slepc: for use SLEPc eigen solver')
 source=(${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('5aa98937f00e37a57f0c5b083f1475d4ce0cf1bec6ccca5a8556cf1e8e9a180f48f5094f3526f57af08cb73e19e32a3eb9f81050840fa5b15a19bdfccc99ed68')
+sha512sums=('2a473f51e701311421d8963a5e1b84e2d8625f299d55692b2c4c8b27be4f01d5f22916b2d8c37f512424c61e30c386775538ecea6a7a0bb68d049843e4823676')
 
 build() {
   export LDFLAGS="-lkahip $LDFLAGS"
@@ -73,4 +73,3 @@ package() {
   install ${pkgname}-${pkgver}/cpp/doc/latex/*.pdf ${pkgdir}/usr/share/doc/${pkgname}
   install -Dm 644 ${pkgname}-${pkgver}/COPYING -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
-makedepends+=("hypre" "mumps" "pastix")

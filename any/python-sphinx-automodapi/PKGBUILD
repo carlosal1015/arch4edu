@@ -4,8 +4,8 @@ pkgbase=python-sphinx-automodapi
 _pname=${pkgbase#python-}
 _pyname=${_pname//-/_}
 pkgname=("python-${_pname}" "python-${_pname}-doc")
-pkgver=0.20.0
-pkgrel=1
+pkgver=0.22.0
+pkgrel=2
 pkgdesc="Sphinx extension for generating API documentation."
 arch=('any')
 url="https://sphinx-automodapi.readthedocs.io"
@@ -20,7 +20,7 @@ checkdepends=('python-pytest'
               'cython'
               'graphviz') # sphinx already in makedepends
 source=("https://files.pythonhosted.org/packages/source/${_pyname:0:1}/${_pyname}/${_pyname}-${pkgver}.tar.gz")
-sha256sums=('24cc97323f163aeefcefb9bdae9cd0a8ea7b699ece34feab116a2557a44949ac')
+sha256sums=('9a6745d606eb948321f0bb7bd4511dc6d8481da8819caa1604d7138910173b38')
 
 get_pyver() {
     python -c "import sys; print('$1'.join(map(str, sys.version_info[:2])))"
@@ -40,11 +40,12 @@ check() {
     #ln -rs ${srcdir}/${_pyname}-${pkgver}/${_pyname/-/_}*egg-info \
     #    build/lib/${_pyname/-/_}-${pkgver}-py$(get_pyver .).egg-info
     #PYTHONPATH="build/lib" pytest ${_pyname/-/_} || warning "Tests failed"
+    # need docutils<0.22
     pytest || warning "Tests failed" # -vv -l -ra --color=yes -o console_output_style=count -p xdist -n 4 #
 }
 
 package_python-sphinx-automodapi() {
-    depends=('python-sphinx>=4'
+    depends=('python-sphinx>=5'
              'python-packaging')
     optdepends=('python-sphinx_rtd_theme: rtd'
                 'python-sphinx-automodapi-doc: Documentation for sphinx-automodapi')

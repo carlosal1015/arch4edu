@@ -3,7 +3,7 @@
 pkgname=pi-hole-web
 _mainpkgname=pi-hole
 _pkgname=web
-pkgver=6.2.1
+pkgver=6.4
 pkgrel=1
 pkgdesc='Pi-hole Dashboard for stats and more.'
 arch=('any')
@@ -19,8 +19,8 @@ source=($_pkgname-$pkgver.tar.gz::https://github.com/$_mainpkgname/$_pkgname/arc
         "https://raw.githubusercontent.com/max72bra/pi-hole-web-customization/main/arch-web-$pkgver-$pkgrel.patch"
 )
 
-sha256sums=('89c60c0013efba2865955a890fa6eb32fa4fc5f090a1d9c14a7472fcf3a5c35c'
-            '635ccfdadf1f532d0c7e3e31777472a443064aab87ee099757570a689f9c5fc2')
+sha256sums=('4501ccbd3a2c429644e10dae68bf3738ab715031ed29607e2d17e80e8a569d03'
+            'bf90cbf556772f2debf6e2d65d9a01408795d069ec77ca57aeca7c8908824e1d')
 
 prepare() {
   cd "$srcdir"/"$_pkgname"-"$pkgver"

@@ -4,6 +4,8 @@ nvchecker:
   - alias: python
 depends:
   - any/python-asteval
+  - any/python-emcee
+  - any/python-numdifftools
 build_prefix: extra-x86_64
 makepkg_args: --nocheck
 pre_build: aur-pre-build

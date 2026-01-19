@@ -4,15 +4,14 @@
 
 pkgname=python-conda
 _name=${pkgname#python-}
-pkgver=25.5.1
+pkgver=25.11.0
 pkgrel=2
 pkgdesc="OS-agnostic, system-level binary package manager and ecosystem https://conda.io"
 arch=('any')
 url="https://github.com/conda/conda"
 license=('BSD-3-Clause')
 depends=(
-  'micromamba'
-  'python>=3.7'
+  'python'
   'python-archspec'
   'python-boltons'
   'python-boto3'
@@ -48,12 +47,10 @@ conflicts=(
 )
 options=(!emptydirs)
 backup=(etc/conda/condarc)
-source=(
-  "$url/releases/download/$pkgver/$_name-$pkgver.tar.gz"
-  "py-3.13-logging.patch"
-)
-sha256sums=('b3d91503d8f95f29bffd0d47c0f6f9aaa50443a250d5a201ba6866c79099a5c0'
-            'dcd0edb6cc59c67629ddfa6e9fb38f53eff293df92d8a0222ede051c8e66b149')
+source=("$url/releases/download/$pkgver/$_name-$pkgver.tar.gz"
+        "py-3.13-logging.patch::$url/commit/62196c897df3d7aea7063d0c08d1bf6e6fd91600.patch")
+sha256sums=('62aad5c046936b07e3ea44d6d908f2d94b427049420332def421e9c72ff3961e'
+            'ffb6ee9cc5572e1a24d547bcaf04ccf987a2f8a6c54321ccd242633454675743')
 
 prepare() {
   cd "$srcdir/$_name-$pkgver" || exit
